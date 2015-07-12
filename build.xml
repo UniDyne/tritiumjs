@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="TritiumJS" default="all" basedir=".">
+
+<property environment="env"/>
+<property file="build.props" />
+<property location="." name="application.home"/>
+
+
+<!--======== PREPARE ========-->
+<target name="prepare">
+	<mkdir dir="${build}" />
+	<tstamp>
+		<format property="build.year" pattern="yyyy" />
+		<format property="test.timestamp" pattern="yyyyMMdd'.'HHmm" />
+		<format property="build.timestamp" pattern="yyyyMMdd" />
+	</tstamp>
+</target>
+
+<!--======== CLEAN ========-->
+<target name="clean" description="Cleans build.">
+	<defaultexcludes remove="**/*~"/>
+	<delete includeEmptyDirs="true" failOnError="false">
+		<fileset dir="${application.home}" includes="*~"/>
+		<fileset dir="${application.home}" includes="**/*~"/>
+		<fileset dir="${build}" includes="**/*"/>
+	</delete>
+	<defaultexcludes default="true"/>
+</target>
+
+<!--======== ALL ========-->
+<target name="all" depends="mergejs,compressjs" description="Builds it." />
+
+<!--======== MERGE ========-->
+<target name="mergejs" description="Merge JavaScript sources.">
+	<concat destfile="${build}/Tritium.js">
+		<fileset file="${src}/atob.js" />
+		<fileset file="${src}/Lang.js" />
+		<fileset file="${src}/Request.js" />
+		<fileset file="${src}/Drag.js" />
+		
+		<fileset file="${src}/Formats.js" />
+		<fileset file="${src}/Template.js" />
+		
+		<fileset file="${src}/Tritium.js" />
+		
+		<fileset file="${src}/ui/Element.js" />
+		<fileset file="${src}/ui/Tritium.UI.js" />
+		<fileset file="${src}/ui/Panel.js" />
+		<fileset file="${src}/ui/Window.js" />
+		<fileset file="${src}/ui/Dialog.js" />
+		<fileset file="${src}/ui/Notifier.js" />
+		<fileset file="${src}/ui/Toolbar.js" />
+		<fileset file="${src}/ui/TextEditor.js" />
+		<fileset file="${src}/ui/Slider.js" />
+		<fileset file="${src}/ui/Components.js" />
+		
+		
+		<fileset file="${src}/ui/YouTubeWin.js" />
+		
+		<fileset file="${src}/App.js" />
+	</concat>
+</target>
+
+<!--======== COMPRESS ========-->
+<target name="compressjs" depends="mergejs" description="Compress JavaScript sources.">
+	<java dir="${build}" jar="${yui.jar}" output="${build}/Tritium.min.js" fork="true" failonerror="true">
+		<arg value="--type"/>
+		<arg value="js"/>
+		<arg value="${build}/Tritium.js" />
+	</java>
+</target>
+
+</project>
